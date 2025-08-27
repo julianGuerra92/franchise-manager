@@ -44,7 +44,7 @@ resource "aws_security_group" "webserver_security_group" {
 }
 
 resource "aws_security_group" "database_security_group" {
-  name        = "database security group"
+  name        = "webserver-sg-${terraform.workspace}"
   description = "enable mysql/aurora access on port 3306"
   vpc_id      = aws_default_vpc.default_vpc.id
 
@@ -77,7 +77,7 @@ resource "aws_security_group" "database_security_group" {
 }
 
 resource "aws_db_subnet_group" "database_subnet_group" {
-  name         = "database-subnets"
+  name         = "database-subnets-${terraform.workspace}"
   subnet_ids   = [
     aws_default_subnet.subnet_az1.id,
     aws_default_subnet.subnet_az2.id
