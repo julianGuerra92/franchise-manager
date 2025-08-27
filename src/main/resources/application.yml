@@ -12,9 +12,9 @@ spring:
   webflux:
     base-path: /api
   r2dbc:
-    url: r2dbc:mysql://localhost:3306/accenture_db
-    username: root
-    password: 123456
+    url: ${DB_URL:r2dbc:mysql://mysql:3306/accenture_db}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:123456}
     pool:
       enabled: true
       max-size: 20
