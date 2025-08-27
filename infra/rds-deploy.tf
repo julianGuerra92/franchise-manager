@@ -1,5 +1,9 @@
 provider "aws" {
-  region  = "us-east-1"
+  region = "us-east-1"
+}
+
+variable "environment" {
+  default = "dev"
 }
 
 resource "aws_default_vpc" "default_vpc" {
@@ -19,7 +23,7 @@ resource "aws_default_subnet" "subnet_az2" {
 }
 
 resource "aws_security_group" "webserver_security_group" {
-  name        = "webserver security group"
+  name        = "webserver-sg-${var.environment}"
   description = "enable http access on port 80"
   vpc_id      = aws_default_vpc.default_vpc.id
 
@@ -38,57 +42,56 @@ resource "aws_security_group" "webserver_security_group" {
     cidr_blocks      = ["0.0.0.0/0"]
   }
 
-  tags   = {
-    Name = "webserver security group"
+  tags = {
+    Name = "webserver-sg-${var.environment}"
   }
 }
 
 resource "aws_security_group" "database_security_group" {
-  name        = "webserver-sg-${terraform.workspace}"
+  name        = "database-sg-${var.environment}"
   description = "enable mysql/aurora access on port 3306"
   vpc_id      = aws_default_vpc.default_vpc.id
 
   ingress {
-    description      = "mysql web server access"
-    from_port        = 3306
-    to_port          = 3306
-    protocol         = "tcp"
-    security_groups  = [aws_security_group.webserver_security_group.id]
+    description     = "mysql web server access"
+    from_port       = 3306
+    to_port         = 3306
+    protocol        = "tcp"
+    security_groups = [aws_security_group.webserver_security_group.id]
   }
 
   ingress {
-    description      = "mysql local access"
-    from_port        = 3306
-    to_port          = 3306
-    protocol         = "tcp"
-    cidr_blocks  = ["181.32.146.30/32"]
+    description = "mysql local access"
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["181.32.146.30/32"]
   }
 
   egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags   = {
-    Name = "database security group"
+  tags = {
+    Name = "database-sg-${var.environment}"
   }
 }
 
 resource "aws_db_subnet_group" "database_subnet_group" {
-  name         = "database-subnets-${terraform.workspace}"
-  subnet_ids   = [
+  name       = "database-subnets-${var.environment}"
+  subnet_ids = [
     aws_default_subnet.subnet_az1.id,
     aws_default_subnet.subnet_az2.id
   ]
-  description  = "subnet group for the rds instance"
+  description = "subnet group for the rds instance"
 
-  tags   = {
-    Name = "database-subnets"
+  tags = {
+    Name = "database-subnets-${var.environment}"
   }
 }
-
 
 variable "db_username" {}
 variable "db_password" {
@@ -96,17 +99,17 @@ variable "db_password" {
 }
 
 resource "aws_db_instance" "db_instance" {
-  engine                  = "mysql"
-  engine_version          = "8.0"
-  multi_az                = false
-  identifier              = "accenture-rds-instance-dev"
-  username                = var.db_username
-  password                = var.db_password
-  instance_class          = "db.t3.micro"
-  allocated_storage       = 20
-  db_subnet_group_name    = aws_db_subnet_group.database_subnet_group.name
-  vpc_security_group_ids  = [aws_security_group.database_security_group.id]
-  db_name                 = "accenture_db"
-  skip_final_snapshot     = true
-  publicly_accessible     = true
+  engine                 = "mysql"
+  engine_version         = "8.0"
+  multi_az               = false
+  identifier             = "accenture-rds-instance-${var.environment}"
+  username               = var.db_username
+  password               = var.db_password
+  instance_class         = "db.t3.micro"
+  allocated_storage      = 20
+  db_subnet_group_name   = aws_db_subnet_group.database_subnet_group.name
+  vpc_security_group_ids = [aws_security_group.database_security_group.id]
+  db_name                = "accenture_db"
+  skip_final_snapshot    = true
+  publicly_accessible    = true
 }
