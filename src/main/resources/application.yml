@@ -1,0 +1,23 @@
+server:
+  port: ${SERVER_PORT:8080}
+management:
+  health:
+    binders:
+      enabled: true
+  endpoint:
+    include: health,info,metrics,prometheus
+spring:
+  profiles:
+    active: ${ACTIVE_PROFILE:dev}
+  webflux:
+    base-path: /api
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/accenture_db
+    username: root
+    password: 123456
+    pool:
+      enabled: true
+      max-size: 20
+      initial-size: 10
+      max-idle-time: 30m
+
