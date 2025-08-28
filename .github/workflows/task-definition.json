@@ -18,7 +18,7 @@
       "environment": [
         {
           "name": "DB_URL",
-          "value": "r2dbc:mysql://${RDS_ENDPOINT}:3306/accenture_db"
+          "value": "r2dbc:mysql://accenture-rds-instance-dev.clyg0gc86f4c.us-east-1.rds.amazonaws.com:3306/accenture_db"
         },
         {
           "name": "DB_USERNAME",
