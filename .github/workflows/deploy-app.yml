@@ -12,6 +12,9 @@ env:
   ECS_CLUSTER: udea-pruebas-cluster
   ECS_TASK_DEFINITION: .github/workflows/task-definition.json
   CONTAINER_NAME: accenture-deploy
+  RDS_ENDPOINT: accenture-rds-instance-dev.clyg0gc86f4c.us-east-1.rds.amazonaws.com
+  DB_USERNAME: ${{ secrets.DB_USER }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
 jobs:
 

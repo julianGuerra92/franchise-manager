@@ -15,7 +15,20 @@
         }
       ],
       "essential": true,
-      "environment": [],
+      "environment": [
+        {
+          "name": "DB_URL",
+          "value": "r2dbc:mysql://${RDS_ENDPOINT}:3306/accenture_db"
+        },
+        {
+          "name": "DB_USERNAME",
+          "value": "${DB_USERNAME}"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "value": "${DB_PASSWORD}"
+        }
+      ],
       "environmentFiles": [],
       "mountPoints": [],
       "volumesFrom": [],
