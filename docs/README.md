@@ -1,105 +1,151 @@
-# Spring Boot Clean Architecture WebFlux API
+# Gestor de Franquicias - Accenture
 
-This repository contains a clean architecture implementation of a web API using Spring Boot and WebFlux. Clean architecture is a software design pattern that promotes separation of concerns and maintainability by organizing code into distinct layers with clear dependencies and responsibilities. This project aims to provide a well-structured foundation for building scalable and maintainable web applications.
+Este proyecto fue construido siguiendo los principios de Clean Architecture y utilizando Spring WebFlux para lograr una aplicación escalable, mantenible y reactiva.
 
-## Table of Contents
+## Tabla de contenidos
+- [Para Iniciar](#para-iniciar)
+    - [Prerrequisitos](#prerrequisitos)
+    - [Instalación](#instalación)
+    - [Comandos Docker](#comandos-docker)
+    - [Ejecución de Pruebas Unitarias](#ejecución-de-pruebas-unitarias)
+- [Endpoints Existentes](#endpoints-existentes)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Tecnologías Utilizadas](#tecnologías-utilizadas)
+- [Consideraciones](#consideraciones)
+- [Despliegue en AWS y Base de Datos](#despliegue-en-aws-y-base-de-datos)
+## Para Iniciar
+Sigue estas instrucciones para levantar el proyecto en tu máquina local.
 
-- [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Installation](#installation)
-- [Project Structure](#project-structure)
-- [Usage](#usage)
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Contributing](#contributing)
-- [License](#license)
-
-## Getting Started
-
-Follow these instructions to get the project up and running on your local machine.
-
-### Prerequisites
-
-- [Java](https://www.oracle.com/java/technologies/javase-downloads.html) (Java 17 or higher)
+### Prerrequisitos
+- [Java](https://www.oracle.com/java/technologies/javase-downloads.html) (Java 17 o superior)
 - [Maven](https://maven.apache.org/download.cgi)
 - [Docker](https://docs.docker.com/get-docker/)
 
-### Installation
-
-1. Clone the repository:
-
+### Instalación
+1. Clona el repositorio:
    ```bash
-   git clone https://github.com/jugurta/cleanarchitecture.git
+   git clone https://github.com/julianGuerra92/franchise-manager.git
+   ```
+2. Navega al directorio del proyecto:
+   ```bash
+   cd franchise-manager
    ```
 
-2. Navigate to the project directory:
+### Comandos Docker
+Para iniciar el proyecto en un entorno Docker:
+```bash
+docker-compose up --build
+```
+Esto levantará todos los servicios definidos en el archivo `docker-compose.yml`.
 
-   ```bash
-   cd cleanarchitecture
-   ```
+### URL Base de la API
+Una vez que el proyecto se levanta con Docker, la API queda disponible en:
 
-3. Build the project using Maven:
+```
+http://localhost:8080/api/
+```
 
-   ```bash
-   mvn clean install
-   ```
+### Ejecución de Pruebas Unitarias
+Para ejecutar las pruebas unitarias del proyecto:
+```bash
+mvn test
+```
 
-The application should now be up and running locally.
+## Endpoints Existentes
+A continuación se listan los endpoints REST disponibles:
 
-## Project Structure
+- **Sucursal (Branch):**
+  - `POST /branch` — Crea una sucursal.
 
-The project follows the clean architecture principles, which means it's organized into distinct layers:
+- **Franquicia (Franchise):**
+  - `POST /franchise` — Crea una franquicia.
 
-- **Presentation**: Contains the web controllers and request/response models.
-- **Domain**: Contains the core domain entities and business rules.
-- **Infrastructure**: Handles database access and data storage.
+- **Producto (Product):**
+  - `POST /product` — Crea un producto.
+  - `PUT /product/{id}` — Actualiza el stock de un producto.
+  - `DELETE /product/{id}` — Elimina un producto.
 
-This separation of concerns makes the application easy to maintain and test.
+## Ejemplos de JSON para cada endpoint
+A continuación se muestran ejemplos de los cuerpos JSON que debes enviar en cada endpoint:
 
-<img src="assets/project-structure.png" width="50%">
+### Franquicia (Franchise)
+**POST /franchise**
+```json
+{
+  "name": "Franquicia Ejemplo"
+}
+```
 
-## Usage
+### Sucursal (Branch)
+**POST /branch**
+```json
+{
+  "name": "Sucursal Principal",
+  "franchiseId": 1
+}
+```
 
-To interact with the API, you can use tools like [Postman](https://www.postman.com/) or [curl](https://curl.se/).
+### Producto (Product)
+**POST /product**
+```json
+{
+  "name": "Producto A",
+  "stock": 100.0,
+  "branchId": 1
+}
+```
 
-Example API endpoints:
+**PUT /product/{id}**
+```json
+{
+  "stock": 150.0
+}
+```
 
 
-- `POST /person`: Create a new person.
-- `GET /person/{id}`: Retrieve a person by ID.
+## Estructura del Proyecto
+El proyecto sigue la arquitectura limpia, separando claramente las capas de dominio, infraestructura y presentación:
+- `domain/model`: Modelos de negocio.
+- `domain/repository`: Interfaces de persistencia.
+- `domain/usecase`: Casos de uso.
+- `infrastructure`: Implementaciones técnicas (persistencia, configuración, etc).
+- `presentation/rest`: Controladores y DTOs para la API REST.
 
-Ensure to check the API documentation and the available endpoints in the project source code.
+## Tecnologías Utilizadas
+- Java 17+
+- Spring Boot
+- Spring WebFlux
+- Maven
+- Docker
 
-## Features
+## Consideraciones
+- El proyecto está diseñado para ser reactivo y escalable.
+- La estructura facilita la mantenibilidad y la extensión de funcionalidades.
+- Los endpoints aceptan y devuelven datos en formato JSON.
 
-- Clean architecture for maintainability and scalability.
-- Reactive programming with Spring WebFlux.
-- Dockerized application for easy deployment.
-- API endpoints for user management.
+## Despliegue en AWS y Base de Datos
 
-## Technologies Used
+### Despliegue de Base de Datos con Terraform
+La base de datos utilizada por la aplicación se despliega en AWS RDS utilizando Terraform. El archivo de configuración se encuentra en:
 
-- [Spring Boot](https://spring.io/projects/spring-boot)
-- [Spring WebFlux](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html)
-- [Maven](https://maven.apache.org/)
-- [Docker](https://www.docker.com/)
+```
+infra/rds-deploy.tf
+```
 
-## Contributing
+Esto creará una instancia de RDS en AWS según la configuración definida en el archivo `rds-deploy.tf`.
 
-Contributions are welcome! If you'd like to contribute to this project, please follow these steps:
+### Despliegue de la Aplicación en AWS con GitHub Actions
+El despliegue de la aplicación en AWS se realiza automáticamente mediante un flujo de trabajo de GitHub Actions. Cada vez que se realiza un push a la rama principal, el pipeline construye la aplicación y la despliega en AWS.
 
-1. Fork the repository.
-2. Create a new branch for your feature or bug fix.
-3. Make your changes and commit them.
-4. Push your changes to your fork.
-5. Create a pull request to the `main` branch of this repository.
+El archivo de configuración del workflow se encuentra en el repositorio de GitHub, y realiza las siguientes tareas:
+- Compila y prueba la aplicación.
+- Construye la imagen Docker.
+- Publica la imagen en Amazon ECR.
+- Despliega la aplicación en AWS (por ejemplo, ECS, EC2 o Elastic Beanstalk).
 
-Please ensure your code follows the project's coding standards and includes appropriate tests.
+Para más detalles, revisa el archivo de workflow en el repositorio de GitHub.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-Happy coding! 🚀
+URL del servicio desplegado: 
+```
+http://100.25.45.46:8080/api/
+```
