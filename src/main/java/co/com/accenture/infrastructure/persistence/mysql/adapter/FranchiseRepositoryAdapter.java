@@ -26,11 +26,13 @@ public class FranchiseRepositoryAdapter implements FranchiseRepository {
 
     @Override
     public Mono<Franchise> findById(Long id) {
-        return null;
+        return franchiseMysqlRepository
+                .findById(id)
+                .map(franchiseMysqlMapper::toDomain);
     }
 
     @Override
-    public Mono<Franchise> updateById(Long id, Franchise franchise) {
+    public Mono<Franchise> updateNameById(Long id, String name) {
         return null;
     }
 }

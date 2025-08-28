@@ -12,9 +12,12 @@ spring:
   webflux:
     base-path: /api
   r2dbc:
-    url: ${DB_URL:r2dbc:mysql://mysql:3306/accenture_db}
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:123456}
+#    url: ${DB_URL:r2dbc:mysql://mysql:3306/accenture_db}
+#    username: ${DB_USERNAME:root}
+#    password: ${DB_PASSWORD:123456}
+    url: r2dbc:mysql://accenture-rds-instance-dev.clyg0gc86f4c.us-east-1.rds.amazonaws.com:3306/accenture_db
+    username: admin
+    password: accenture2025*
     pool:
       enabled: true
       max-size: 20

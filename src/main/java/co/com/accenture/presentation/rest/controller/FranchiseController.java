@@ -1,6 +1,6 @@
 package co.com.accenture.presentation.rest.controller;
 
-import co.com.accenture.domain.usecase.CreateFranchiseUseCase;
+import co.com.accenture.domain.usecase.FranchiseUseCases;
 import co.com.accenture.presentation.rest.dto.FranchiseDTO;
 import co.com.accenture.presentation.rest.mapper.FranchiseDTOMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +15,12 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class FranchiseController {
 
-    private final CreateFranchiseUseCase createFranchiseUseCase;
+    private final FranchiseUseCases franchiseUseCases;
     private final FranchiseDTOMapper franchiseDTOMapper;
 
     @PostMapping
     Mono<FranchiseDTO> createFranchise(@RequestBody FranchiseDTO franchiseDTO) {
-        return createFranchiseUseCase
+        return franchiseUseCases
                 .createFranchise(franchiseDTOMapper.toDomain(franchiseDTO)).map(franchiseDTOMapper::toDTO);
     }
 

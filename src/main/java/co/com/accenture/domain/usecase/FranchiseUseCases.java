@@ -8,10 +8,14 @@ import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
-public class CreateFranchiseUseCase {
+public class FranchiseUseCases {
     private final FranchiseRepository franchiseRepository;
 
     public Mono<Franchise> createFranchise(Franchise franchise) {
         return franchiseRepository.save(franchise);
+    }
+
+    public Mono<Franchise> getFranchiseById(Long id) {
+        return franchiseRepository.findById(id);
     }
 }

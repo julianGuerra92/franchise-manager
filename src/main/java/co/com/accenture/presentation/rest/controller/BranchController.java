@@ -1,0 +1,28 @@
+package co.com.accenture.presentation.rest.controller;
+
+
+import co.com.accenture.domain.usecase.BranchUseCases;
+import co.com.accenture.presentation.rest.dto.BranchDTO;
+import co.com.accenture.presentation.rest.mapper.BranchDTOMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
+
+@RestController
+@RequestMapping("/branch")
+@RequiredArgsConstructor
+public class BranchController {
+
+    private final BranchUseCases branchUseCases;
+    private final BranchDTOMapper branchDTOMapper;
+
+    @PostMapping
+    Mono<BranchDTO> createBranch(@RequestBody BranchDTO branchDTO) {
+        return branchUseCases
+                .createBranch(branchDTOMapper.toDomain(branchDTO)).map(branchDTOMapper::toDTO);
+    }
+
+}
