@@ -39,6 +39,7 @@ jobs:
 
   #Build's job
   build-and-push:
+    needs: tests
     name: Build and Push to ECR
     runs-on: ubuntu-latest
     steps:
